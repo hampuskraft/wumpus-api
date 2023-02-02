@@ -12,8 +12,8 @@ Produces a key-value map of member IDs → sanitized names.
 
 Sanitization is performed in the following order:
 
-1. If the member has any roles specified in `exclude_roles`, skip sanitization.
-2. If the member ID is in `exclude_users`, skip sanitization.
+1. If the member ID is in `exclude_users`, skip sanitization.
+2. If the member has any roles specified in `exclude_roles`, skip sanitization.
 3. Use the member's nickname if set, else the username. (Override with the `force_username` option.)
 4. Run [Unidecode](https://pypi.org/project/Unidecode/) on the name to convert Unicode characters to ASCII equivalents.
 5. If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
