@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "wumpus-api"
+version = "0.0.0"
+description = "Discord member username & nickname sanitization API."
+authors = ["Hampus Kraft <hello@hampuskraft.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^2.2.2"
+gevent = "^22.10.2"
+gunicorn = "^20.1.0"
+pydantic = "^1.10.4"
+sentry-sdk = { extras = ["flask"], version = "^1.14.0" }
+unidecode = "^1.3.6"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+mypy = "^0.991"
+pre-commit = "^3.0.3"
+pytest = "^7.2.1"
+ruff = "^0.0.239"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.black]
+line-length = 120
+
+[tool.mypy]
+strict = true
