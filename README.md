@@ -18,7 +18,7 @@ Sanitization is performed in the following order:
 4. Run [Unidecode](https://pypi.org/project/Unidecode/) on the name to convert Unicode characters to ASCII equivalents.
 5. If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
 6. Collapse any consecutive characters >= `max_consecutive` into a single character.
-7. Convert the name to lowercase if the number of uppercase characters >= `max_consecutive_upper`.
+7. Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
 8. Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
 9. Strip any leading, trailing, or consecutive whitespace from the name and trim it to 32 characters.
 10. If the name is empty, use the fallback name.
