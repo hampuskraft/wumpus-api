@@ -20,7 +20,7 @@ black = "^23.1.0"
 mypy = "^0.991"
 pre-commit = "^3.0.3"
 pytest = "^7.2.1"
-ruff = "^0.0.239"
+ruff = "^0.0.240"
 
 [build-system]
 requires = ["poetry-core"]
