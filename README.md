@@ -29,7 +29,7 @@ Sanitization is performed in the following order:
 | -------- | ------------------- |
 | id       | snowflake           |
 | username | string              |
-| nickname | string              |
+| nickname | ?string             |
 | roles    | array of snowflakes |
 
 #### Sanitize Structure
