@@ -39,7 +39,7 @@ class Sanitizer:
         if any(role in member.roles for role in schema.exclude_roles):
             return name
 
-        if schema.force_username:
+        if schema.force_username or schema.fallback_name == name:
             name = member.username
 
         leading_emoji = ""

@@ -108,3 +108,19 @@ def test_sanitize_member() -> None:
         Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=2, max_emoji_trailing=2))
         == "👀👀 test 👀👀"
     )
+
+    member = Member(
+        id="123",
+        username="█▀█ █▄█ ▀█▀",
+        nickname="ZChange Name",
+        roles=[],
+    )
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "ZChange Name"
+
+    member = Member(
+        id="123",
+        username="test",
+        nickname="ZChange Name",
+        roles=[],
+    )
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
