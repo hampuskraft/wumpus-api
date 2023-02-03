@@ -46,6 +46,8 @@ All fields are optional except members, which must contain at least one member.
 | force_username?        | boolean                                      | Force the username to be used (default `false`)       |
 | max_consecutive?       | integer                                      | Max consecutive chars (default unset)                 |
 | max_consecutive_upper? | integer                                      | Max consecutive uppercase chars (default unset)       |
+| max_emoji_leading?     | integer                                      | Max leading emoji chars (default `0`)                 |
+| max_emoji_trailing?    | integer                                      | Max trailing emoji chars (default `0`)                |
 | replace_char?          | string                                       | Invalid replacement character (default empty string)  |
 
 #### Example Request Body

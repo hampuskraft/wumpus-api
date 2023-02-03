@@ -1,3 +1,4 @@
+import emoji
 from pydantic import BaseModel, Field
 from unidecode import unidecode
 
@@ -17,6 +18,8 @@ class SanitizeSchema(BaseModel):
     force_username: bool = False
     max_consecutive: int = Field(default=0, ge=0, le=32)
     max_consecutive_upper: int = Field(default=0, ge=0, le=32)
+    max_emoji_leading: int = Field(default=0, ge=0, le=32)
+    max_emoji_trailing: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
     replace_char: str = Field(default="", max_length=1)
 
@@ -39,6 +42,15 @@ class Sanitizer:
         if schema.force_username:
             name = member.username
 
+        leading_emoji = ""
+        trailing_emoji = ""
+
+        if schema.max_emoji_leading:
+            leading_emoji = Sanitizer.get_leading_emoji(name, schema.max_emoji_leading)
+
+        if schema.max_emoji_trailing:
+            trailing_emoji = Sanitizer.get_trailing_emoji(name, schema.max_emoji_trailing)
+
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
 
         if schema.max_consecutive:
@@ -50,6 +62,12 @@ class Sanitizer:
         if schema.dehoist:
             name = Sanitizer.dehoist(name)
 
+        if leading_emoji:
+            name = f"{leading_emoji} {name}"
+
+        if trailing_emoji:
+            name = f"{name} {trailing_emoji}"
+
         name = " ".join(name.split())
         name = name[:32]
 
@@ -57,6 +75,44 @@ class Sanitizer:
             name = schema.fallback_name
 
         return name
+
+    @staticmethod
+    def get_leading_emoji(name: str, max_leading_emoji: int) -> str:
+        """
+        Get the leading emoji from a name.
+        """
+
+        leading_emojis = []
+
+        for char in name:
+            if emoji.is_emoji(char):
+                leading_emojis.append(char)
+            else:
+                break
+
+        if len(leading_emojis) > max_leading_emoji:
+            leading_emojis = leading_emojis[:max_leading_emoji]
+
+        return "".join(leading_emojis)
+
+    @staticmethod
+    def get_trailing_emoji(name: str, max_trailing_emoji: int) -> str:
+        """
+        Get the trailing emoji from a name.
+        """
+
+        trailing_emojis = []
+
+        for char in reversed(name):
+            if emoji.is_emoji(char):
+                trailing_emojis.append(char)
+            else:
+                break
+
+        if len(trailing_emojis) > max_trailing_emoji:
+            trailing_emojis = trailing_emojis[:max_trailing_emoji]
+
+        return "".join(reversed(trailing_emojis))
 
     @staticmethod
     def replace_consecutive(name: str, max_consecutive: int) -> str:

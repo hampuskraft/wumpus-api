@@ -23,6 +23,26 @@ def test_dehoist() -> None:
     assert Sanitizer.dehoist("abc") == "abc"
 
 
+def test_get_leading_emoji() -> None:
+    assert Sanitizer.get_leading_emoji("", 1) == ""
+    assert Sanitizer.get_leading_emoji("abc", 1) == ""
+    assert Sanitizer.get_leading_emoji("👀abc", 1) == "👀"
+    assert Sanitizer.get_leading_emoji("👀👀abc", 1) == "👀"
+    assert Sanitizer.get_leading_emoji("👀👀abc", 2) == "👀👀"
+    assert Sanitizer.get_leading_emoji("👀👀👀abc", 2) == "👀👀"
+    assert Sanitizer.get_leading_emoji("👀👀👀abc", 3) == "👀👀👀"
+
+
+def test_get_trailing_emoji() -> None:
+    assert Sanitizer.get_trailing_emoji("", 1) == ""
+    assert Sanitizer.get_trailing_emoji("abc", 1) == ""
+    assert Sanitizer.get_trailing_emoji("abc👀", 1) == "👀"
+    assert Sanitizer.get_trailing_emoji("abc👀👀", 1) == "👀"
+    assert Sanitizer.get_trailing_emoji("abc👀👀", 2) == "👀👀"
+    assert Sanitizer.get_trailing_emoji("abc👀👀👀", 2) == "👀👀"
+    assert Sanitizer.get_trailing_emoji("abc👀👀👀", 3) == "👀👀👀"
+
+
 def test_sanitize_member() -> None:
     member = Member(
         id="123",
@@ -68,3 +88,23 @@ def test_sanitize_member() -> None:
         roles=[],
     )
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_consecutive=4)) == "Reeee"
+
+    member = Member(
+        id="123",
+        username="test",
+        nickname="👀👀👀test👀👀👀",
+        roles=[],
+    )
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=1)) == "👀 test"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_trailing=1)) == "test 👀"
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=1, max_emoji_trailing=1))
+        == "👀 test 👀"
+    )
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=2)) == "👀👀 test"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_trailing=2)) == "test 👀👀"
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=2, max_emoji_trailing=2))
+        == "👀👀 test 👀👀"
+    )

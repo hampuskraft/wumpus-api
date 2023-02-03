@@ -220,6 +220,20 @@ files = [
 ]
 
 [[package]]
+name = "emoji"
+version = "2.2.0"
+description = "Emoji for Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "emoji-2.2.0.tar.gz", hash = "sha256:a2986c21e4aba6b9870df40ef487a17be863cb7778dcf1c01e25917b7cd210bb"},
+]
+
+[package.extras]
+dev = ["coverage", "coveralls", "pytest"]
+
+[[package]]
 name = "filelock"
 version = "3.9.0"
 description = "A platform independent file lock."
@@ -919,6 +933,18 @@ testing = ["build[virtualenv]", "filelock (>=3.4.0)", "flake8 (<5)", "flake8-202
 testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
 
 [[package]]
+name = "types-emoji"
+version = "2.1.0.1"
+description = "Typing stubs for emoji"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-emoji-2.1.0.1.tar.gz", hash = "sha256:8abbd27b8ebd51ae0bafdf04ba07263b984bd300cf73eedceb1cfc156f589c8b"},
+    {file = "types_emoji-2.1.0.1-py3-none-any.whl", hash = "sha256:fbbc07b57d82cdb7be3e34f3aad3a4157063f929668016bd27e62e528f3e656d"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.4.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -1074,4 +1100,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "af3cad078fa7a1fde76d85307804d0126b52389ee163416d120830560b286970"
+content-hash = "e20d2f0a5b639ec48a22a13dfff9101ee41a90581b4b6a3be75df1d365aa9dcf"
