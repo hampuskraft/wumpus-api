@@ -2,6 +2,8 @@
 
 Discord member username & nickname sanitization API. A hosted version is available at https://api.wump.io/v1.
 
+> Used in production at [NetherGames Network](https://discord.gg/ng) with over 31,000 members.
+
 ## API Endpoints
 
 ### `POST /sanitize`
