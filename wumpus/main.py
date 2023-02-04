@@ -10,7 +10,7 @@ from werkzeug.exceptions import HTTPException
 from wumpus.sanitizer import Sanitizer, SanitizeSchema
 
 SENTRY_DSN = os.environ.get("SENTRY_DSN")
-sentry_sdk.init(SENTRY_DSN, integrations=[FlaskIntegration()], traces_sample_rate=1.0)
+sentry_sdk.init(SENTRY_DSN, integrations=[FlaskIntegration()], traces_sample_rate=0.1)
 
 app = Flask(__name__)
 app.config["JSON_SORT_KEYS"] = False
