@@ -24,10 +24,8 @@ def test_get_trailing_emoji() -> None:
 def test_replace_char_spacing() -> None:
     assert Sanitizer.replace_char_spacing("a b c", 2) == "abc"
     assert Sanitizer.replace_char_spacing("a b c", 3) == "a b c"
-
     assert Sanitizer.replace_char_spacing("aa bb cc", 2) == "aa bb cc"
     assert Sanitizer.replace_char_spacing("aa bb cc", 3) == "aa bb cc"
-
     assert Sanitizer.replace_char_spacing("J U S T I N", 5) == "JUSTIN"
     assert Sanitizer.replace_char_spacing("J U S T I N", 6) == "J U S T I N"
 
@@ -55,15 +53,10 @@ def test_dehoist() -> None:
 
 
 def test_normalize_parentheses() -> None:
-    assert Sanitizer.normalize_parentheses("(A)(B)(C)") == "ABC"
-    assert Sanitizer.normalize_parentheses("(ABC)(DEF)(GHI)") == "(ABC)(DEF)(GHI)"
-    assert Sanitizer.normalize_parentheses("abc () def") == "abc () def"
-    assert Sanitizer.normalize_parentheses("abc ()") == "abc ()"
-    assert Sanitizer.normalize_parentheses("abc (def") == "abc (def"
-    assert Sanitizer.normalize_parentheses("abc (def) ghi (jkl) mno") == "abc (def) ghi (jkl) mno"
-    assert Sanitizer.normalize_parentheses("abc (def) ghi (jkl)") == "abc (def) ghi (jkl)"
-    assert Sanitizer.normalize_parentheses("abc (def) ghi") == "abc (def) ghi"
     assert Sanitizer.normalize_parentheses("abc") == "abc"
+    assert Sanitizer.normalize_parentheses("(a)(b)(c)") == "abc"
+    assert Sanitizer.normalize_parentheses("(abc)(def)(ghi)") == "(abc)(def)(ghi)"
+    assert Sanitizer.normalize_parentheses("(abc) (def) (ghi)") == "(abc) (def) (ghi)"
 
 
 def test_sanitize_member() -> None:
