@@ -20,6 +20,7 @@ class SanitizeSchema(BaseModel):
     max_consecutive_upper: int = Field(default=0, ge=0, le=32)
     max_emoji_leading: int = Field(default=0, ge=0, le=32)
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
+    max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
     replace_char: str = Field(default="", max_length=1)
 
@@ -52,6 +53,10 @@ class Sanitizer:
             trailing_emoji = Sanitizer.get_trailing_emoji(name, schema.max_emoji_trailing)
 
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
+        name = " ".join(name.split())[:32]
+
+        if schema.max_spaces:
+            name = Sanitizer.replace_spaces(name, schema.max_spaces)
 
         if schema.max_consecutive:
             name = Sanitizer.replace_consecutive(name, schema.max_consecutive)
@@ -67,9 +72,6 @@ class Sanitizer:
 
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
-
-        name = " ".join(name.split())
-        name = name[:32]
 
         if not name:
             name = schema.fallback_name
@@ -113,6 +115,17 @@ class Sanitizer:
             trailing_emojis = trailing_emojis[:max_trailing_emoji]
 
         return "".join(reversed(trailing_emojis))
+
+    @staticmethod
+    def replace_spaces(name: str, max_spaces: int) -> str:
+        """
+        If the number of spaces in a name is >= `max_spaces`, remove all spaces.
+        """
+
+        if name.count(" ") >= max_spaces:
+            name = name.replace(" ", "")
+
+        return name
 
     @staticmethod
     def replace_consecutive(name: str, max_consecutive: int) -> str:

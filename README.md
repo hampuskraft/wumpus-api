@@ -14,16 +14,22 @@ Produces a key-value map of member IDs → sanitized names.
 
 Sanitization is performed in the following order:
 
-1. If the member ID is in `exclude_users`, skip sanitization.
-2. If the member has any roles specified in `exclude_roles`, skip sanitization.
-3. Use the member's nickname if set, else the username. (Override with the `force_username` option.)
-4. Run [Unidecode](https://pypi.org/project/Unidecode/) on the name to convert Unicode characters to ASCII equivalents.
-5. If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
-6. Collapse any consecutive characters >= `max_consecutive` into a single character.
-7. Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
-8. Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
-9. Strip any leading, trailing, or consecutive whitespace from the name and trim it to 32 characters.
-10. If the name is empty, use the fallback name.
+- Get the member's name (nickname or username).
+- If the member ID is in `exclude_users`, skip sanitization.
+- If the member has any roles specified in `exclude_roles`, skip sanitization.
+- If `force_username` is true or the `name` == `fallback_name`, use the username.
+- If `max_emoji_leading` > 0, store the number of leading emoji characters in `leading_emoji`.
+- If `max_emoji_trailing` > 0, store the number of trailing emoji characters in `trailing_emoji`.
+- Run [Unidecode](https://pypi.org/project/Unidecode/) on the `name` to convert Unicode characters to ASCII equivalents.
+- If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
+- Strip any leading, trailing, or consecutive whitespace from the name and trim it to 32 characters.
+- If `max_spaces` > 0, remove all spaces from the name if the number of spaces >= `max_spaces`.
+- Collapse any consecutive characters >= `max_consecutive` into a single character.
+- Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
+- Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
+- Prepend the name with the leading emoji characters, if any.
+- Append the name with the trailing emoji characters, if any.
+- If the name is empty, use the `fallback_name`.
 
 #### Member Structure
 
@@ -50,6 +56,7 @@ All fields are optional except members, which must contain at least one member.
 | max_consecutive_upper? | integer                                      | Max consecutive uppercase chars (default unset)       |
 | max_emoji_leading?     | integer                                      | Max leading emoji chars (default `0`)                 |
 | max_emoji_trailing?    | integer                                      | Max trailing emoji chars (default `0`)                |
+| max_spaces?            | integer                                      | Max spaces or remove all (default unset)              |
 | replace_char?          | string                                       | Invalid replacement character (default empty string)  |
 
 #### Example Request Body

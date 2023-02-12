@@ -43,6 +43,13 @@ def test_get_trailing_emoji() -> None:
     assert Sanitizer.get_trailing_emoji("abc👀👀👀", 3) == "👀👀👀"
 
 
+def test_replace_spaces() -> None:
+    assert Sanitizer.replace_spaces("t e s t", 1) == "test"
+    assert Sanitizer.replace_spaces("t e s t", 3) == "test"
+    assert Sanitizer.replace_spaces("t e s t", 4) == "t e s t"
+    assert Sanitizer.replace_spaces("t e s t", 5) == "t e s t"
+
+
 def test_sanitize_member() -> None:
     member = Member(
         id="123",
