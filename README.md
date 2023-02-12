@@ -17,14 +17,14 @@ Sanitization is performed in the following order:
 - Get the member's name (nickname or username).
 - If the member ID is in `exclude_users`, skip sanitization.
 - If the member has any roles specified in `exclude_roles`, skip sanitization.
-- If `force_username` is true or the `name` == `fallback_name`, use the username.
-- Store the number of leading emoji characters in `leading_emoji` if `max_emoji_leading` > 0.
-- Store the number of trailing emoji characters in `trailing_emoji` if `max_emoji_trailing` > 0.
+- If `force_username` is true or the `name` is `fallback_name`, use the username.
+- Store the leading emoji characters in `leading_emoji` (`max_emoji_leading`).
+- Store the trailing emoji characters in `trailing_emoji` (`max_emoji_trailing`).
 - Run [Unidecode](https://pypi.org/project/Unidecode/) on the `name` to convert Unicode characters to ASCII equivalents.
 - If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
 - Strip any leading, trailing, or consecutive whitespace from the name.
 - Remove all spaces from the name if the number of spaces >= `max_spaces`.
-- Join any single-character words together if the number of single-character words is >= `max_char_spacing`.
+- Join any single-character words together if the count is >= `max_char_spacing`.
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
 - Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.

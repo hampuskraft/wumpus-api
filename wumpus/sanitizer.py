@@ -135,7 +135,7 @@ class Sanitizer:
     @staticmethod
     def replace_char_spacing(name: str, max_char_spacing: int) -> str:
         """
-        Join any single-character words together if the number of single-character words is >= `max_char_spacing`.
+        Join any single-character words together if the count is >= `max_char_spacing`.
         """
 
         name_split = name.strip().split()
