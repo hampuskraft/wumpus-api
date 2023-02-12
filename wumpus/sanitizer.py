@@ -20,6 +20,7 @@ class SanitizeSchema(BaseModel):
     max_consecutive_upper: int = Field(default=0, ge=0, le=32)
     max_emoji_leading: int = Field(default=0, ge=0, le=32)
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
+    max_single_char_spacing: int = Field(default=0, ge=0, le=32)
     max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
     replace_char: str = Field(default="", max_length=1)
@@ -53,10 +54,13 @@ class Sanitizer:
             trailing_emoji = Sanitizer.get_trailing_emoji(name, schema.max_emoji_trailing)
 
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
-        name = " ".join(name.split())[:32]
+        name = " ".join(name.split())
 
         if schema.max_spaces:
             name = Sanitizer.replace_spaces(name, schema.max_spaces)
+
+        if schema.max_single_char_spacing:
+            name = Sanitizer.replace_single_char_spacing(name, schema.max_single_char_spacing)
 
         if schema.max_consecutive:
             name = Sanitizer.replace_consecutive(name, schema.max_consecutive)
@@ -73,6 +77,7 @@ class Sanitizer:
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
 
+        name = name[:32]
         if not name:
             name = schema.fallback_name
 
@@ -126,6 +131,20 @@ class Sanitizer:
             name = name.replace(" ", "")
 
         return name
+
+    @staticmethod
+    def replace_single_char_spacing(name: str, max_single_char_spacing: int) -> str:
+        """
+        Algorithm to join spaced single characters into a single word.
+        """
+
+        name_split = name.strip().split()
+        single_char_words = [word for word in name_split if len(word) == 1]
+
+        if len(single_char_words) > max_single_char_spacing:
+            return "".join(single_char_words) + " ".join(word for word in name_split if len(word) > 1)
+        else:
+            return " ".join(name_split)
 
     @staticmethod
     def replace_consecutive(name: str, max_consecutive: int) -> str:

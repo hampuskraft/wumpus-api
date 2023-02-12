@@ -1,28 +1,6 @@
 from wumpus.sanitizer import Member, Sanitizer, SanitizeSchema
 
 
-def test_replace_consecutive() -> None:
-    assert Sanitizer.replace_consecutive("aaabbbccc", 1) == "abc"
-    assert Sanitizer.replace_consecutive("aaabbbccc", 2) == "aabbcc"
-    assert Sanitizer.replace_consecutive("aaabbbccc", 3) == "aaabbbccc"
-
-
-def test_replace_consecutive_upper() -> None:
-    assert Sanitizer.replace_consecutive_upper("TEST", 1) == "test"
-    assert Sanitizer.replace_consecutive_upper("TEST", 2) == "test"
-    assert Sanitizer.replace_consecutive_upper("TEST", 3) == "test"
-    assert Sanitizer.replace_consecutive_upper("TEST", 4) == "test"
-    assert Sanitizer.replace_consecutive_upper("test", 4) == "test"
-    assert Sanitizer.replace_consecutive_upper("Test Test Test", 2) == "Test Test Test"
-
-
-def test_dehoist() -> None:
-    assert Sanitizer.dehoist("!@#$%^&*()_+{}|:<>?") == ""
-    assert Sanitizer.dehoist("!@#$%^&*()_+{}|:<>?abc") == "abc"
-    assert Sanitizer.dehoist("abc!@#$%^&*()_+{}|:<>?") == "abc!@#$%^&*()_+{}|:<>?"
-    assert Sanitizer.dehoist("abc") == "abc"
-
-
 def test_get_leading_emoji() -> None:
     assert Sanitizer.get_leading_emoji("", 1) == ""
     assert Sanitizer.get_leading_emoji("abc", 1) == ""
@@ -43,11 +21,37 @@ def test_get_trailing_emoji() -> None:
     assert Sanitizer.get_trailing_emoji("abc👀👀👀", 3) == "👀👀👀"
 
 
-def test_replace_spaces() -> None:
-    assert Sanitizer.replace_spaces("t e s t", 1) == "test"
-    assert Sanitizer.replace_spaces("t e s t", 3) == "test"
-    assert Sanitizer.replace_spaces("t e s t", 4) == "t e s t"
-    assert Sanitizer.replace_spaces("t e s t", 5) == "t e s t"
+def test_replace_single_char_spacing() -> None:
+    assert Sanitizer.replace_single_char_spacing("a b c", 2) == "abc"
+    assert Sanitizer.replace_single_char_spacing("a b c", 3) == "a b c"
+
+    assert Sanitizer.replace_single_char_spacing("aa bb cc", 2) == "aa bb cc"
+    assert Sanitizer.replace_single_char_spacing("aa bb cc", 3) == "aa bb cc"
+
+    assert Sanitizer.replace_single_char_spacing("J U S T I N", 5) == "JUSTIN"
+    assert Sanitizer.replace_single_char_spacing("J U S T I N", 6) == "J U S T I N"
+
+
+def test_replace_consecutive() -> None:
+    assert Sanitizer.replace_consecutive("aaabbbccc", 1) == "abc"
+    assert Sanitizer.replace_consecutive("aaabbbccc", 2) == "aabbcc"
+    assert Sanitizer.replace_consecutive("aaabbbccc", 3) == "aaabbbccc"
+
+
+def test_replace_consecutive_upper() -> None:
+    assert Sanitizer.replace_consecutive_upper("TEST", 1) == "test"
+    assert Sanitizer.replace_consecutive_upper("TEST", 2) == "test"
+    assert Sanitizer.replace_consecutive_upper("TEST", 3) == "test"
+    assert Sanitizer.replace_consecutive_upper("TEST", 4) == "test"
+    assert Sanitizer.replace_consecutive_upper("test", 4) == "test"
+    assert Sanitizer.replace_consecutive_upper("Test Test Test", 2) == "Test Test Test"
+
+
+def test_dehoist() -> None:
+    assert Sanitizer.dehoist("!@#$%^&*()_+{}|:<>?") == ""
+    assert Sanitizer.dehoist("!@#$%^&*()_+{}|:<>?abc") == "abc"
+    assert Sanitizer.dehoist("abc!@#$%^&*()_+{}|:<>?") == "abc!@#$%^&*()_+{}|:<>?"
+    assert Sanitizer.dehoist("abc") == "abc"
 
 
 def test_sanitize_member() -> None:
