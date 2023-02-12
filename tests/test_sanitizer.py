@@ -21,15 +21,15 @@ def test_get_trailing_emoji() -> None:
     assert Sanitizer.get_trailing_emoji("abc👀👀👀", 3) == "👀👀👀"
 
 
-def test_replace_single_char_spacing() -> None:
-    assert Sanitizer.replace_single_char_spacing("a b c", 2) == "abc"
-    assert Sanitizer.replace_single_char_spacing("a b c", 3) == "a b c"
+def test_replace_char_spacing() -> None:
+    assert Sanitizer.replace_char_spacing("a b c", 2) == "abc"
+    assert Sanitizer.replace_char_spacing("a b c", 3) == "a b c"
 
-    assert Sanitizer.replace_single_char_spacing("aa bb cc", 2) == "aa bb cc"
-    assert Sanitizer.replace_single_char_spacing("aa bb cc", 3) == "aa bb cc"
+    assert Sanitizer.replace_char_spacing("aa bb cc", 2) == "aa bb cc"
+    assert Sanitizer.replace_char_spacing("aa bb cc", 3) == "aa bb cc"
 
-    assert Sanitizer.replace_single_char_spacing("J U S T I N", 5) == "JUSTIN"
-    assert Sanitizer.replace_single_char_spacing("J U S T I N", 6) == "J U S T I N"
+    assert Sanitizer.replace_char_spacing("J U S T I N", 5) == "JUSTIN"
+    assert Sanitizer.replace_char_spacing("J U S T I N", 6) == "J U S T I N"
 
 
 def test_replace_consecutive() -> None:

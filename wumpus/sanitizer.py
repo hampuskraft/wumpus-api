@@ -16,11 +16,11 @@ class SanitizeSchema(BaseModel):
     exclude_users: list[str] = Field(default_factory=list, max_items=1000)
     fallback_name: str = Field(default="ZChange Name", min_length=1, max_length=32)
     force_username: bool = False
+    max_char_spacing: int = Field(default=0, ge=0, le=32)
     max_consecutive: int = Field(default=0, ge=0, le=32)
     max_consecutive_upper: int = Field(default=0, ge=0, le=32)
     max_emoji_leading: int = Field(default=0, ge=0, le=32)
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
-    max_single_char_spacing: int = Field(default=0, ge=0, le=32)
     max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
     replace_char: str = Field(default="", max_length=1)
@@ -59,8 +59,8 @@ class Sanitizer:
         if schema.max_spaces:
             name = Sanitizer.replace_spaces(name, schema.max_spaces)
 
-        if schema.max_single_char_spacing:
-            name = Sanitizer.replace_single_char_spacing(name, schema.max_single_char_spacing)
+        if schema.max_char_spacing:
+            name = Sanitizer.replace_char_spacing(name, schema.max_char_spacing)
 
         if schema.max_consecutive:
             name = Sanitizer.replace_consecutive(name, schema.max_consecutive)
@@ -133,15 +133,15 @@ class Sanitizer:
         return name
 
     @staticmethod
-    def replace_single_char_spacing(name: str, max_single_char_spacing: int) -> str:
+    def replace_char_spacing(name: str, max_char_spacing: int) -> str:
         """
-        Algorithm to join spaced single characters into a single word.
+        Join any single-character words together if the number of single-character words is >= `max_char_spacing`.
         """
 
         name_split = name.strip().split()
         single_char_words = [word for word in name_split if len(word) == 1]
 
-        if len(single_char_words) > max_single_char_spacing:
+        if len(single_char_words) > max_char_spacing:
             return "".join(single_char_words) + " ".join(word for word in name_split if len(word) > 1)
         else:
             return " ".join(name_split)
