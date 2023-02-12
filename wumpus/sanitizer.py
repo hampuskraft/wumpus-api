@@ -10,6 +10,7 @@ class Member(BaseModel):
     username: str
     nickname: str | None
     roles: list[str] = Field(default_factory=list, max_items=250)
+    force_username: bool = False
 
 
 class SanitizeSchema(BaseModel):
@@ -44,7 +45,7 @@ class Sanitizer:
         if any(role in member.roles for role in schema.exclude_roles):
             return name
 
-        if schema.force_username or schema.fallback_name == name:
+        if schema.force_username or member.force_username or schema.fallback_name == name:
             name = member.username
 
         leading_emoji = ""

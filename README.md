@@ -34,12 +34,13 @@ Sanitization is performed in the following order:
 
 #### Member Structure
 
-| Field    | Type                |
-| -------- | ------------------- |
-| id       | snowflake           |
-| username | string              |
-| nickname | ?string             |
-| roles    | array of snowflakes |
+| Field           | Type                |
+| --------------- | ------------------- |
+| id              | snowflake           |
+| username        | string              |
+| nickname        | ?string             |
+| roles           | array of snowflakes |
+| force_username? | boolean             |
 
 #### Sanitize Structure
 
