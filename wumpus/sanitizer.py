@@ -78,7 +78,7 @@ class Sanitizer:
             name = f"{name} {trailing_emoji}"
 
         name = name[:32]
-        if not name:
+        if not name or all(emoji.is_emoji(char) for char in name.split()):
             name = schema.fallback_name
 
         return name
