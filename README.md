@@ -18,13 +18,13 @@ Sanitization is performed in the following order:
 - If the member ID is in `exclude_users`, skip sanitization.
 - If the member has any roles specified in `exclude_roles`, skip sanitization.
 - If `force_username` is true or the `name` == `fallback_name`, use the username.
-- If `max_emoji_leading` > 0, store the number of leading emoji characters in `leading_emoji`.
-- If `max_emoji_trailing` > 0, store the number of trailing emoji characters in `trailing_emoji`.
+- Store the number of leading emoji characters in `leading_emoji` if `max_emoji_leading` > 0.
+- Store the number of trailing emoji characters in `trailing_emoji` if `max_emoji_trailing` > 0.
 - Run [Unidecode](https://pypi.org/project/Unidecode/) on the `name` to convert Unicode characters to ASCII equivalents.
 - If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
 - Strip any leading, trailing, or consecutive whitespace from the name.
-- If `max_spaces` > 0, remove all spaces from the name if the number of spaces >= `max_spaces`.
-- If `max_single_char_spacing` > 0, join e.g. "t e s t" into "test" if the number of spaces >= `max_single_char_spacing`.
+- Remove all spaces from the name if the number of spaces >= `max_spaces`.
+- Join e.g. "t e s t" into "test" if the number of spaces >= `max_single_char_spacing`.
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
 - Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
