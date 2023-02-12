@@ -1,3 +1,5 @@
+import re
+
 import emoji
 from pydantic import BaseModel, Field
 from unidecode import unidecode
@@ -213,18 +215,11 @@ class Sanitizer:
     @staticmethod
     def normalize_parentheses(name: str) -> str:
         """
-        Remove parentheses containing single characters and otherwise normalize parentheses.
+        Normalize parentheses in a name.
         """
 
-        new_name = ""
+        matches = re.findall(r"\((\w)\)", name)
+        for match in matches:
+            name = name.replace(f"({match})", match)
 
-        for char in name:
-            if char == "(":
-                continue
-            elif char == ")":
-                if new_name and new_name[-1] == "(":
-                    new_name = new_name[:-1]
-            else:
-                new_name += char
-
-        return new_name
+        return name

@@ -55,14 +55,15 @@ def test_dehoist() -> None:
 
 
 def test_normalize_parentheses() -> None:
-    assert Sanitizer.normalize_parentheses("abc") == "abc"
-    assert Sanitizer.normalize_parentheses("abc()") == "abc"
-    assert Sanitizer.normalize_parentheses("abc()def") == "abcdef"
-    assert Sanitizer.normalize_parentheses("abc(def") == "abcdef"
-    assert Sanitizer.normalize_parentheses("abc(def)ghi") == "abcdefghi"
-    assert Sanitizer.normalize_parentheses("abc(def)ghi(jkl)") == "abcdefghijkl"
-    assert Sanitizer.normalize_parentheses("abc(def)ghi(jkl)mno") == "abcdefghijklmno"
     assert Sanitizer.normalize_parentheses("(A)(B)(C)") == "ABC"
+    assert Sanitizer.normalize_parentheses("(ABC)(DEF)(GHI)") == "(ABC)(DEF)(GHI)"
+    assert Sanitizer.normalize_parentheses("abc () def") == "abc () def"
+    assert Sanitizer.normalize_parentheses("abc ()") == "abc ()"
+    assert Sanitizer.normalize_parentheses("abc (def") == "abc (def"
+    assert Sanitizer.normalize_parentheses("abc (def) ghi (jkl) mno") == "abc (def) ghi (jkl) mno"
+    assert Sanitizer.normalize_parentheses("abc (def) ghi (jkl)") == "abc (def) ghi (jkl)"
+    assert Sanitizer.normalize_parentheses("abc (def) ghi") == "abc (def) ghi"
+    assert Sanitizer.normalize_parentheses("abc") == "abc"
 
 
 def test_sanitize_member() -> None:

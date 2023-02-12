@@ -27,7 +27,7 @@ Sanitization is performed in the following order:
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
 - Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
-- Remove parentheses containing single characters and otherwise normalize parentheses.
+- Remove parentheses around single characters to avoid names like "(A)(B)(C)" if `normalize_parentheses` is true.
 - Prepend or append the stored leading/trailing emoji characters.
 - Trim the name to 32 characters if it still exceeds the limit.
 - If the name is empty, use the `fallback_name`.
