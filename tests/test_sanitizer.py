@@ -147,3 +147,11 @@ def test_sanitize_member() -> None:
         roles=[],
     )
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
+
+    member = Member(
+        id="123",
+        username="🅕🅞🅡🅜🅤🅛🅐🅢🅤🅜🅞",
+        nickname=None,
+        roles=[],
+    )
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "FORMULASUMO"
