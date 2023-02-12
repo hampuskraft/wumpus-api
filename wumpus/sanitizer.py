@@ -215,7 +215,7 @@ class Sanitizer:
     @staticmethod
     def normalize_parentheses(name: str) -> str:
         """
-        Normalize parentheses in a name.
+        Remove parentheses around single characters.
         """
 
         matches = re.findall(r"\((\w)\)", name)
