@@ -60,6 +60,12 @@ class Sanitizer:
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
         name = " ".join(name.split())
 
+        if schema.normalize_parentheses:
+            name = Sanitizer.normalize_parentheses(name)
+
+        if schema.dehoist:
+            name = Sanitizer.dehoist(name)
+
         if schema.max_spaces:
             name = Sanitizer.replace_spaces(name, schema.max_spaces)
 
@@ -71,12 +77,6 @@ class Sanitizer:
 
         if schema.max_consecutive_upper:
             name = Sanitizer.replace_consecutive_upper(name, schema.max_consecutive_upper)
-
-        if schema.normalize_parentheses:
-            name = Sanitizer.normalize_parentheses(name)
-
-        if schema.dehoist:
-            name = Sanitizer.dehoist(name)
 
         if leading_emoji:
             name = f"{leading_emoji} {name}"

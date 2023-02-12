@@ -22,12 +22,12 @@ Sanitization is performed in the following order:
 - Run [Unidecode](https://pypi.org/project/Unidecode/) on the `name` to convert Unicode characters to ASCII equivalents.
 - If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
 - Strip any leading, trailing, or consecutive whitespace from the name.
+- Remove parentheses around single characters if `normalize_parentheses` is true.
+- Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
 - Remove all spaces from the name if the number of spaces >= `max_spaces`.
 - Join any single-character words together if the count is >= `max_char_spacing`.
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
-- Remove parentheses around single characters if `normalize_parentheses` is true.
-- Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
 - Prepend or append the stored leading/trailing emoji characters.
 - Trim the name to 32 characters if it still exceeds the limit.
 - If the name is empty, use the `fallback_name`.
