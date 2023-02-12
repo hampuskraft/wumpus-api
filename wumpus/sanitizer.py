@@ -23,6 +23,7 @@ class SanitizeSchema(BaseModel):
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
     max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
+    normalize_parentheses: bool = True
     replace_char: str = Field(default="", max_length=1)
 
 
@@ -70,6 +71,9 @@ class Sanitizer:
 
         if schema.dehoist:
             name = Sanitizer.dehoist(name)
+
+        if schema.normalize_parentheses:
+            name = Sanitizer.normalize_parentheses(name)
 
         if leading_emoji:
             name = f"{leading_emoji} {name}"
@@ -205,3 +209,22 @@ class Sanitizer:
                 name = name[1:]
 
         return name
+
+    @staticmethod
+    def normalize_parentheses(name: str) -> str:
+        """
+        Remove parentheses containing single characters and otherwise normalize parentheses.
+        """
+
+        new_name = ""
+
+        for char in name:
+            if char == "(":
+                continue
+            elif char == ")":
+                if new_name and new_name[-1] == "(":
+                    new_name = new_name[:-1]
+            else:
+                new_name += char
+
+        return new_name

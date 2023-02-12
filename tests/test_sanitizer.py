@@ -54,6 +54,17 @@ def test_dehoist() -> None:
     assert Sanitizer.dehoist("abc") == "abc"
 
 
+def test_normalize_parentheses() -> None:
+    assert Sanitizer.normalize_parentheses("abc") == "abc"
+    assert Sanitizer.normalize_parentheses("abc()") == "abc"
+    assert Sanitizer.normalize_parentheses("abc()def") == "abcdef"
+    assert Sanitizer.normalize_parentheses("abc(def") == "abcdef"
+    assert Sanitizer.normalize_parentheses("abc(def)ghi") == "abcdefghi"
+    assert Sanitizer.normalize_parentheses("abc(def)ghi(jkl)") == "abcdefghijkl"
+    assert Sanitizer.normalize_parentheses("abc(def)ghi(jkl)mno") == "abcdefghijklmno"
+    assert Sanitizer.normalize_parentheses("(A)(B)(C)") == "ABC"
+
+
 def test_sanitize_member() -> None:
     member = Member(
         id="123",

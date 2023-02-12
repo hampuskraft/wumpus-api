@@ -27,6 +27,7 @@ Sanitization is performed in the following order:
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
 - Dehoist the name if `dehoist` is true, removing any leading non-alphanumeric characters.
+- Remove parentheses containing single characters and otherwise normalize parentheses.
 - Prepend or append the stored leading/trailing emoji characters.
 - Trim the name to 32 characters if it still exceeds the limit.
 - If the name is empty, use the `fallback_name`.
@@ -58,6 +59,7 @@ All fields are optional except members, which must contain at least one member.
 | max_emoji_leading?     | integer                                      | Max leading emoji chars (default `0`)                 |
 | max_emoji_trailing?    | integer                                      | Max trailing emoji chars (default `0`)                |
 | max_spaces?            | integer                                      | Max spaces or remove all (default unset)              |
+| normalize_parentheses? | boolean                                      | Normalize parentheses (default `true`)                |
 | replace_char?          | string                                       | Invalid replacement character (default empty string)  |
 
 #### Example Request Body
