@@ -6,6 +6,7 @@ from unidecode import unidecode
 
 R = "®"
 TM = "™"
+HEART = "<3"
 
 REGIONAL_INDICATORS_TO_ASCII = {
     "🇦": "A",
@@ -68,7 +69,8 @@ class SanitizeSchema(BaseModel):
     strict: bool = False
     strip_pipes_leading: bool = True
     strip_pipes_trailing: bool = True
-    trailing_trademark: bool = True
+    trailing_heart: bool = True
+    trailing_trademark: bool = False
 
 
 class Sanitizer:
@@ -110,6 +112,11 @@ class Sanitizer:
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
         name = " ".join(name.split())
 
+        trailing_heart = False
+        if schema.trailing_heart:
+            trailing_heart = name.endswith(HEART)
+            name = name.rstrip(HEART)
+
         if schema.normalize_brackets:
             name = Sanitizer.normalize_brackets(name)
 
@@ -148,6 +155,9 @@ class Sanitizer:
 
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
+
+        if trailing_heart:
+            name = f"{name} {HEART}"
 
         name = " ".join(name.split())[:32]
 

@@ -122,13 +122,13 @@ def test_sanitize_member() -> None:
     member = Member(id="123", username="|| C O N Q U E S T O R || ®", nickname=None, roles=[])
     assert (
         Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
-        == "conquestor®"
+        == "conquestor"
     )
 
     member = Member(id="123", username="Vitor-Yato Sykrony®", nickname=None, roles=[])
     assert (
         Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
-        == "Vitor-Yato Sykrony®"
+        == "Vitor-Yato Sykrony"
     )
 
     member = Member(id="123", username="test®", nickname=None, roles=[])
@@ -182,3 +182,11 @@ def test_sanitize_member() -> None:
     member = Member(id="123", username="__test-123.abc__", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test-123.abc__"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "test-123.abc"
+
+    member = Member(id="123", username="test <3", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test <3"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "test <3"
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True, trailing_heart=False))
+        == "test 3"
+    )

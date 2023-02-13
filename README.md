@@ -48,7 +48,8 @@ All fields are optional except members, which must contain at least one member.
 | replace_char?          | string                                       | Invalid replacement character (default empty string)  |
 | strip_pipes_leading?   | boolean                                      | Strip leading `\|` characters (default `true`)        |
 | strip_pipes_trailing?  | boolean                                      | Strip trailing `\|` characters (default `true`)       |
-| trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `true`)         |
+| trailing_heart?        | boolean                                      | Preserve trailing `<3` (default `true`)               |
+| trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `false`)        |
 
 \* Strict sanitization only allows alphanumeric characters, spaces, underscores, hyphens, and periods. Leading or trailing special characters are stripped. Other normalization and sanitization rules are still applied.
 
