@@ -110,6 +110,7 @@ def test_sanitize_member() -> None:
 
     member = Member(id="123", username="█▀█ █▄█ ▀█▀", nickname="ZChange Name", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "ZChange Name"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "ZChange Name"
 
     member = Member(id="123", username="test", nickname="ZChange Name", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
@@ -133,10 +134,18 @@ def test_sanitize_member() -> None:
     member = Member(id="123", username="test®", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True)) == "test®"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=False)) == "test"
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True, strict=True))
+        == "test®"
+    )
 
     member = Member(id="123", username="test", nickname="test™", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True)) == "test™"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=False)) == "test"
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True, strict=True))
+        == "test™"
+    )
 
     member = Member(id="123", username="🆂🅰🅽🆈🅰", nickname=None, roles=[])
     assert (
@@ -156,12 +165,20 @@ def test_sanitize_member() -> None:
 
     member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "WG Zhu DEAD POOL"
 
     member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname="WG Zhu \DEAD POOL/", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "WG Zhu DEAD POOL"
 
     member = Member(id="123", username="『Ézz ↯ R È H Û 』", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "Ezz | R E H U"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "Ezz R E H U"
 
     member = Member(id="123", username="[ ಥ‿ಥ ] S A D", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "th_th S A D"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "th_th S A D"
+
+    member = Member(id="123", username="__test-123__", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test-123__"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "test-123"

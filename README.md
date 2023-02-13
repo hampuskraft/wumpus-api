@@ -30,6 +30,7 @@ All fields are optional except members, which must contain at least one member.
 
 | Field                  | Type                                         | Description                                           |
 | ---------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| strict?                | boolean                                      | Strict\* sanitization (default `false`)               |
 | members                | array of [member](#member-structure) objects | List of members to sanitize (1-1000)                  |
 | dehoist?               | boolean                                      | Strip leading non-alphanum chars (default `true`)     |
 | exclude_roles?         | array of snowflakes                          | Role IDs to exclude from sanitization                 |
@@ -48,6 +49,8 @@ All fields are optional except members, which must contain at least one member.
 | strip_pipes_leading?   | boolean                                      | Strip leading `\|` characters (default `true`)        |
 | strip_pipes_trailing?  | boolean                                      | Strip trailing `\|` characters (default `true`)       |
 | trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `true`)         |
+
+\* Strict sanitization only allows alphanumeric characters, spaces, underscores, and hyphens. Trailing or leading special characters are stripped.
 
 #### Example Request Body
 

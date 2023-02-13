@@ -65,6 +65,7 @@ class SanitizeSchema(BaseModel):
     normalize_brackets: bool = True
     normalize_regional: bool = True
     replace_char: str = Field(default="", max_length=1)
+    strict: bool = False
     strip_pipes_leading: bool = True
     strip_pipes_trailing: bool = True
     trailing_trademark: bool = True
@@ -133,6 +134,10 @@ class Sanitizer:
         if schema.strip_pipes_trailing:
             name = name.rstrip("|")
 
+        if schema.strict:
+            name = re.sub(r"[^a-zA-Z0-9 _-]", "", name)
+            name = name.strip(" _-")
+
         if trailing_trademark:
             name = f"{name}{trailing_trademark}"
 
@@ -142,13 +147,14 @@ class Sanitizer:
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
 
-        if all(emoji.is_emoji(char) for char in name.split()):
-            name = schema.fallback_name
-
         if schema.normalize_brackets:
             name = Sanitizer.strip_dangling_brackets(name)
 
         name = " ".join(name.split())[:32]
+
+        if all(emoji.is_emoji(char) for char in name.split()):
+            name = schema.fallback_name
+
         if not name:
             name = schema.fallback_name
 
