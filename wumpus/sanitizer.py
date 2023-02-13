@@ -62,11 +62,12 @@ class SanitizeSchema(BaseModel):
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
     max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
-    normalize_letter_symbols: bool = True
-    normalize_parentheses: bool = True
+    normalize_brackets: bool = True
+    normalize_regional: bool = True
     replace_char: str = Field(default="", max_length=1)
-    strip_pipes: bool = True
-    trailing_trademark: bool = False
+    strip_pipes_leading: bool = True
+    strip_pipes_trailing: bool = True
+    trailing_trademark: bool = True
 
 
 class Sanitizer:
@@ -87,10 +88,7 @@ class Sanitizer:
         if schema.force_username or member.force_username or schema.fallback_name == name:
             name = member.username
 
-        if schema.strip_pipes:
-            name = name.replace("|", "")
-
-        if schema.normalize_letter_symbols:
+        if schema.normalize_regional:
             name = "".join(REGIONAL_INDICATORS_TO_ASCII.get(c, c) for c in name)
 
         trailing_trademark = ""
@@ -111,8 +109,8 @@ class Sanitizer:
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
         name = " ".join(name.split())
 
-        if schema.normalize_parentheses:
-            name = Sanitizer.normalize_parentheses(name)
+        if schema.normalize_brackets:
+            name = Sanitizer.normalize_brackets(name)
 
         if schema.dehoist:
             name = Sanitizer.dehoist(name)
@@ -129,6 +127,12 @@ class Sanitizer:
         if schema.max_consecutive_upper:
             name = Sanitizer.replace_consecutive_upper(name, schema.max_consecutive_upper)
 
+        if schema.strip_pipes_leading:
+            name = name.lstrip("|")
+
+        if schema.strip_pipes_trailing:
+            name = name.rstrip("|")
+
         if trailing_trademark:
             name = f"{name}{trailing_trademark}"
 
@@ -138,8 +142,14 @@ class Sanitizer:
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
 
-        name = name[:32]
-        if not name or all(emoji.is_emoji(char) for char in name.split()):
+        if all(emoji.is_emoji(char) for char in name.split()):
+            name = schema.fallback_name
+
+        if schema.normalize_brackets:
+            name = Sanitizer.strip_dangling_brackets(name)
+
+        name = " ".join(name.split())[:32]
+        if not name:
             name = schema.fallback_name
 
         return name
@@ -268,17 +278,37 @@ class Sanitizer:
         return name
 
     @staticmethod
-    def normalize_parentheses(name: str) -> str:
+    def normalize_brackets(name: str) -> str:
         """
-        Remove parentheses or square brackets around single characters.
+        Remove parentheses (), square brackets [], or curly brackets {} around single characters.
         """
 
-        matches = re.findall(r"\((\w)\)", name)
+        matches = re.findall(r"(\(|\[|\{)(\w)(\)|\]|\})", name)
         for match in matches:
-            name = name.replace(f"({match})", match)
-
-        matches = re.findall(r"\[(\w)\]", name)
-        for match in matches:
-            name = name.replace(f"[{match}]", match)
+            name = name.replace("".join(match), match[1])
 
         return name
+
+    @staticmethod
+    def strip_dangling_brackets(name: str) -> str:
+        """
+        Remove dangling brackets, that is closing brackets without an opening bracket, or vice versa.
+        """
+
+        stack = []
+
+        for char in name:
+            if char in "({[":
+                stack.append(char)
+            elif char in ")}]":
+                if (
+                    not stack
+                    or (char == "}" and stack[-1] != "{")
+                    or (char == ")" and stack[-1] != "(")
+                    or (char == "]" and stack[-1] != "[")
+                ):
+                    name = name.replace(char, "")
+                else:
+                    stack.pop()
+
+        return "".join([char for char in name if char not in "({["])

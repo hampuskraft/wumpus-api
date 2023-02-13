@@ -52,14 +52,14 @@ def test_dehoist() -> None:
     assert Sanitizer.dehoist("abc") == "abc"
 
 
-def test_normalize_parentheses() -> None:
-    assert Sanitizer.normalize_parentheses("abc") == "abc"
-    assert Sanitizer.normalize_parentheses("(a)(b)(c)") == "abc"
-    assert Sanitizer.normalize_parentheses("(abc)(def)(ghi)") == "(abc)(def)(ghi)"
-    assert Sanitizer.normalize_parentheses("(abc) (def) (ghi)") == "(abc) (def) (ghi)"
-    assert Sanitizer.normalize_parentheses("[a][b][c]") == "abc"
-    assert Sanitizer.normalize_parentheses("[abc][def][ghi]") == "[abc][def][ghi]"
-    assert Sanitizer.normalize_parentheses("[abc] [def] [ghi]") == "[abc] [def] [ghi]"
+def test_normalize_brackets() -> None:
+    assert Sanitizer.normalize_brackets("abc") == "abc"
+    assert Sanitizer.normalize_brackets("(a)(b)(c)") == "abc"
+    assert Sanitizer.normalize_brackets("(abc)(def)(ghi)") == "(abc)(def)(ghi)"
+    assert Sanitizer.normalize_brackets("(abc) (def) (ghi)") == "(abc) (def) (ghi)"
+    assert Sanitizer.normalize_brackets("[a][b][c]") == "abc"
+    assert Sanitizer.normalize_brackets("[abc][def][ghi]") == "[abc][def][ghi]"
+    assert Sanitizer.normalize_brackets("[abc] [def] [ghi]") == "[abc] [def] [ghi]"
 
 
 def test_sanitize_member() -> None:
@@ -111,13 +111,13 @@ def test_sanitize_member() -> None:
     member = Member(id="123", username="|| C O N Q U E S T O R || ®", nickname=None, roles=[])
     assert (
         Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
-        == "conquestor"
+        == "conquestor®"
     )
 
     member = Member(id="123", username="Vitor-Yato Sykrony®", nickname=None, roles=[])
     assert (
         Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
-        == "Vitor-Yato Sykrony"
+        == "Vitor-Yato Sykrony®"
     )
 
     member = Member(id="123", username="test®", nickname=None, roles=[])
@@ -146,5 +146,12 @@ def test_sanitize_member() -> None:
 
     member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
+
     member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname="WG Zhu \DEAD POOL/", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
+
+    member = Member(id="123", username="『Ézz ↯ R È H Û 』", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "Ezz | R E H U"
+
+    member = Member(id="123", username="[ ಥ‿ಥ ] S A D", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "th_th S A D"
