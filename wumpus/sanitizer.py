@@ -4,6 +4,9 @@ import emoji
 from pydantic import BaseModel, Field
 from unidecode import unidecode
 
+R = "®"
+TM = "™"
+
 
 class Member(BaseModel):
     id: str
@@ -28,6 +31,8 @@ class SanitizeSchema(BaseModel):
     members: list[Member] = Field(min_items=1, max_items=1000)
     normalize_parentheses: bool = True
     replace_char: str = Field(default="", max_length=1)
+    strip_pipes: bool = True
+    trailing_trademark: bool = False
 
 
 class Sanitizer:
@@ -47,6 +52,15 @@ class Sanitizer:
 
         if schema.force_username or member.force_username or schema.fallback_name == name:
             name = member.username
+
+        if schema.strip_pipes:
+            name = name.replace("|", "")
+
+        trailing_trademark = ""
+        if schema.trailing_trademark:
+            trailing_trademark = R if name.endswith(R) else TM if name.endswith(TM) else ""
+
+        name = name.replace(R, "").replace(TM, "")
 
         leading_emoji = ""
         trailing_emoji = ""
@@ -77,6 +91,9 @@ class Sanitizer:
 
         if schema.max_consecutive_upper:
             name = Sanitizer.replace_consecutive_upper(name, schema.max_consecutive_upper)
+
+        if trailing_trademark:
+            name = f"{name}{trailing_trademark}"
 
         if leading_emoji:
             name = f"{leading_emoji} {name}"

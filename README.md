@@ -18,6 +18,8 @@ Sanitization is performed in the following order:
 - If the member ID is in `exclude_users`, skip sanitization.
 - If the member has any roles specified in `exclude_roles`, skip sanitization.
 - If `force_username` is true or the `name` is `fallback_name`, use the username.
+- If `strip_pipes` is true, remove any `|` characters in the name.
+- If `trailing_trademark` is true, store the trailing `®` or `™` characters before removing them.
 - Store the leading & trailing emoji characters, limited to `max_emoji_leading` and `max_emoji_trailing`.
 - Run [Unidecode](https://pypi.org/project/Unidecode/) on the `name` to convert Unicode characters to ASCII equivalents.
 - If a character has no ASCII equivalent, replace it with the character specified in `replace_char`.
@@ -28,7 +30,7 @@ Sanitization is performed in the following order:
 - Join any single-character words together if the count is >= `max_char_spacing`.
 - Collapse any consecutive characters >= `max_consecutive` into a single character.
 - Convert the name to lowercase if the number of consecutive uppercase >= `max_consecutive_upper`.
-- Prepend or append the stored leading/trailing emoji characters.
+- Prepend or append the stored leading/trailing emoji characters and the trailing `®` or `™` characters.
 - Trim the name to 32 characters if it still exceeds the limit.
 - If the name is empty, use the `fallback_name`.
 
@@ -62,6 +64,8 @@ All fields are optional except members, which must contain at least one member.
 | max_spaces?            | integer                                      | Max spaces or remove all (default unset)              |
 | normalize_parentheses? | boolean                                      | Normalize parentheses (default `true`)                |
 | replace_char?          | string                                       | Invalid replacement character (default empty string)  |
+| strip_pipes?           | boolean                                      | Remove `\|` characters (default `true`)               |
+| trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `false`)        |
 
 #### Example Request Body
 

@@ -60,20 +60,10 @@ def test_normalize_parentheses() -> None:
 
 
 def test_sanitize_member() -> None:
-    member = Member(
-        id="123",
-        username="test",
-        nickname="test",
-        roles=[],
-    )
+    member = Member(id="123", username="test", nickname="test", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
 
-    member = Member(
-        id="123",
-        username="testabc",
-        nickname="test",
-        roles=["123"],
-    )
+    member = Member(id="123", username="testabc", nickname="test", roles=["123"])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], force_username=True)) == "testabc"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], force_username=False)) == "test"
     assert (
@@ -81,36 +71,16 @@ def test_sanitize_member() -> None:
         == "test"
     )
 
-    member = Member(
-        id="123",
-        username="𝗨𝗻𝗸𝗻𝗼𝘄𝗻 𝗚𝗼𝗱 𝗣𝗹𝗮𝘆𝗲𝗿",
-        nickname=None,
-        roles=[],
-    )
+    member = Member(id="123", username="𝗨𝗻𝗸𝗻𝗼𝘄𝗻 𝗚𝗼𝗱 𝗣𝗹𝗮𝘆𝗲𝗿", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "Unknown God Player"
 
-    member = Member(
-        id="123",
-        username="A1denxX",
-        nickname=".𝒶𝒾𝒹ℯ𝓃",
-        roles=[],
-    )
+    member = Member(id="123", username="A1denxX", nickname=".𝒶𝒾𝒹ℯ𝓃", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "aiden"
 
-    member = Member(
-        id="123",
-        username="test",
-        nickname="!!!𝓡𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮 😎",
-        roles=[],
-    )
+    member = Member(id="123", username="test", nickname="!!!𝓡𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮𝓮 😎", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_consecutive=4)) == "Reeee"
 
-    member = Member(
-        id="123",
-        username="test",
-        nickname="👀👀👀test👀👀👀",
-        roles=[],
-    )
+    member = Member(id="123", username="test", nickname="👀👀👀test👀👀👀", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_leading=1)) == "👀 test"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_emoji_trailing=1)) == "test 👀"
@@ -125,27 +95,32 @@ def test_sanitize_member() -> None:
         == "👀👀 test 👀👀"
     )
 
-    member = Member(
-        id="123",
-        username="█▀█ █▄█ ▀█▀",
-        nickname="ZChange Name",
-        roles=[],
-    )
+    member = Member(id="123", username="█▀█ █▄█ ▀█▀", nickname="ZChange Name", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "ZChange Name"
 
-    member = Member(
-        id="123",
-        username="test",
-        nickname="ZChange Name",
-        roles=[],
-    )
+    member = Member(id="123", username="test", nickname="ZChange Name", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test"
 
-    member = Member(
-        id="123",
-        username="🅕🅞🅡🅜🅤🅛🅐🅢🅤🅜🅞",
-        nickname=None,
-        roles=[],
-    )
+    member = Member(id="123", username="🅕🅞🅡🅜🅤🅛🅐🅢🅤🅜🅞", nickname=None, roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "FORMULASUMO"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_consecutive_upper=4)) == "formulasumo"
+
+    member = Member(id="123", username="|| C O N Q U E S T O R || ®", nickname=None, roles=[])
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
+        == "conquestor"
+    )
+
+    member = Member(id="123", username="Vitor-Yato Sykrony®", nickname=None, roles=[])
+    assert (
+        Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], max_char_spacing=4, max_consecutive_upper=4))
+        == "Vitor-Yato Sykrony"
+    )
+
+    member = Member(id="123", username="test®", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True)) == "test®"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=False)) == "test"
+
+    member = Member(id="123", username="test", nickname="test™", roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True)) == "test™"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=False)) == "test"
