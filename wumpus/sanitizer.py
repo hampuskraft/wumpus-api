@@ -42,6 +42,12 @@ REGIONAL_INDICATORS_TO_ASCII = {
     "🅿": "P",
 }
 
+STRICT_REGEX = re.compile(r"[^\w &'.-]", re.ASCII)
+STRICT_SPECIAL_CHARS = {" ", "_", ".", "-", "&", "'"}
+
+BRACKETS_REGEX = re.compile(r"(\(|\[|\{)(\w)(\)|\]|\})")
+BRACKETS_MAPPING = {")": "(", "]": "[", "}": "{"}
+
 
 class Member(BaseModel):
     id: str
@@ -145,7 +151,7 @@ class Sanitizer:
             name = Sanitizer.strip_dangling_brackets(name)
 
         if schema.strict:
-            name = re.sub(r"[^a-zA-Z0-9 _.-]", "", name).strip("._- ")
+            name = re.sub(STRICT_REGEX, "", name).strip("".join(STRICT_SPECIAL_CHARS))
 
         if trailing_trademark:
             name = f"{name}{trailing_trademark}"
@@ -298,7 +304,7 @@ class Sanitizer:
         Remove parentheses (), square brackets [], or curly brackets {} around single characters.
         """
 
-        matches = re.findall(r"(\(|\[|\{)(\w)(\)|\]|\})", name)
+        matches = re.findall(BRACKETS_REGEX, name)
         for match in matches:
             name = name.replace("".join(match), match[1])
 
@@ -311,13 +317,12 @@ class Sanitizer:
         """
 
         stack = []
-        mapping = {")": "(", "]": "[", "}": "{"}
 
         for char in name:
-            if char in mapping.values():
+            if char in BRACKETS_MAPPING.values():
                 stack.append(char)
-            elif char in mapping.keys():
-                if not stack or stack[-1] != mapping[char]:
+            elif char in BRACKETS_MAPPING.keys():
+                if not stack or stack[-1] != BRACKETS_MAPPING[char]:
                     name = name.replace(char, "")
                 else:
                     stack.pop()

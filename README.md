@@ -51,7 +51,7 @@ All fields are optional except members, which must contain at least one member.
 | trailing_heart?        | boolean                                      | Preserve trailing `<3` (default `true`)               |
 | trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `false`)        |
 
-\* Strict sanitization only allows alphanumeric characters, spaces, underscores, hyphens, and periods. Leading or trailing special characters are stripped. Other normalization and sanitization rules are still applied.
+\* Strict sanitization only allows alphanumeric characters, spaces, underscores, hyphens, ampersands, apostrophes, and periods. Leading or trailing special characters are stripped. Other normalization and sanitization rules are still applied.
 
 #### Example Request Body
 
