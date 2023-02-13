@@ -179,6 +179,6 @@ def test_sanitize_member() -> None:
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "th_th S A D"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "th_th S A D"
 
-    member = Member(id="123", username="__test-123__", nickname=None, roles=[])
-    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test-123__"
-    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "test-123"
+    member = Member(id="123", username="__test-123.abc__", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "test-123.abc__"
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], strict=True)) == "test-123.abc"

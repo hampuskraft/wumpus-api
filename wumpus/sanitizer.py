@@ -135,8 +135,7 @@ class Sanitizer:
             name = name.rstrip("|")
 
         if schema.strict:
-            name = re.sub(r"[^a-zA-Z0-9 _-]", "", name)
-            name = name.strip(" _-")
+            name = re.sub(r"[^a-zA-Z0-9 _.-]", "", name).strip("._- ")
 
         if trailing_trademark:
             name = f"{name}{trailing_trademark}"

@@ -50,7 +50,7 @@ All fields are optional except members, which must contain at least one member.
 | strip_pipes_trailing?  | boolean                                      | Strip trailing `\|` characters (default `true`)       |
 | trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `true`)         |
 
-\* Strict sanitization only allows alphanumeric characters, spaces, underscores, and hyphens. Trailing or leading special characters are stripped.
+\* Strict sanitization only allows alphanumeric characters, spaces, underscores, hyphens, and periods. Leading or trailing special characters are stripped. Other normalization and sanitization rules are still applied.
 
 #### Example Request Body
 
