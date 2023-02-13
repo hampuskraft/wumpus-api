@@ -60,6 +60,16 @@ def test_normalize_brackets() -> None:
     assert Sanitizer.normalize_brackets("[a][b][c]") == "abc"
     assert Sanitizer.normalize_brackets("[abc][def][ghi]") == "[abc][def][ghi]"
     assert Sanitizer.normalize_brackets("[abc] [def] [ghi]") == "[abc] [def] [ghi]"
+    assert Sanitizer.normalize_brackets("{a}{b}{c}") == "abc"
+    assert Sanitizer.normalize_brackets("{abc}{def}{ghi}") == "{abc}{def}{ghi}"
+    assert Sanitizer.normalize_brackets("{abc} {def} {ghi}") == "{abc} {def} {ghi}"
+
+
+def test_strip_dangling_brackets() -> None:
+    assert Sanitizer.strip_dangling_brackets("()test test") == "test test"
+    assert Sanitizer.strip_dangling_brackets("test (test") == "test test"
+    assert Sanitizer.strip_dangling_brackets("test )test") == "test test"
+    assert Sanitizer.strip_dangling_brackets("test test()") == "test test"
 
 
 def test_sanitize_member() -> None:

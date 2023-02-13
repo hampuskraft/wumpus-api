@@ -296,19 +296,18 @@ class Sanitizer:
         """
 
         stack = []
+        mapping = {")": "(", "]": "[", "}": "{"}
 
         for char in name:
-            if char in "({[":
+            if char in mapping.values():
                 stack.append(char)
-            elif char in ")}]":
-                if (
-                    not stack
-                    or (char == "}" and stack[-1] != "{")
-                    or (char == ")" and stack[-1] != "(")
-                    or (char == "]" and stack[-1] != "[")
-                ):
+            elif char in mapping.keys():
+                if not stack or stack[-1] != mapping[char]:
                     name = name.replace(char, "")
                 else:
                     stack.pop()
 
-        return "".join([char for char in name if char not in "({["])
+        while stack:
+            name = name.replace(stack.pop(), "")
+
+        return name.replace("()", "").replace("[]", "").replace("{}", "")
