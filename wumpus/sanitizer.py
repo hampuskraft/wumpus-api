@@ -4,6 +4,7 @@ import emoji
 from pydantic import BaseModel, Field
 from unidecode import unidecode
 
+C = "©"
 R = "®"
 TM = "™"
 HEART = "<3"
@@ -98,7 +99,7 @@ class Sanitizer:
         if schema.trailing_trademark:
             trailing_trademark = R if name.endswith(R) else TM if name.endswith(TM) else ""
 
-        name = name.replace(R, "").replace(TM, "")
+        name = name.replace(C, "").replace(R, "").replace(TM, "")
 
         leading_emoji = ""
         trailing_emoji = ""
@@ -112,10 +113,9 @@ class Sanitizer:
         name = unidecode(name, errors="replace", replace_str=schema.replace_char)
         name = " ".join(name.split())
 
-        trailing_heart = False
+        trailing_heart = name.endswith(HEART)
         if schema.trailing_heart:
-            trailing_heart = name.endswith(HEART)
-            name = name.rstrip(HEART)
+            name = name.replace(HEART, "")
 
         if schema.normalize_brackets:
             name = Sanitizer.normalize_brackets(name)
@@ -156,7 +156,7 @@ class Sanitizer:
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
 
-        if trailing_heart:
+        if schema.trailing_heart and trailing_heart:
             name = f"{name} {HEART}"
 
         name = " ".join(name.split())[:32]
