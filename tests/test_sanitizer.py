@@ -57,6 +57,9 @@ def test_normalize_parentheses() -> None:
     assert Sanitizer.normalize_parentheses("(a)(b)(c)") == "abc"
     assert Sanitizer.normalize_parentheses("(abc)(def)(ghi)") == "(abc)(def)(ghi)"
     assert Sanitizer.normalize_parentheses("(abc) (def) (ghi)") == "(abc) (def) (ghi)"
+    assert Sanitizer.normalize_parentheses("[a][b][c]") == "abc"
+    assert Sanitizer.normalize_parentheses("[abc][def][ghi]") == "[abc][def][ghi]"
+    assert Sanitizer.normalize_parentheses("[abc] [def] [ghi]") == "[abc] [def] [ghi]"
 
 
 def test_sanitize_member() -> None:
