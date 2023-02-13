@@ -28,26 +28,26 @@ Refer to the `sanitize_member` method in [`wumpus/sanitizer.py`](https://github.
 
 All fields are optional except members, which must contain at least one member.
 
-| Field                  | Type                                         | Description                                            |
-| ---------------------- | -------------------------------------------- | ------------------------------------------------------ |
-| members                | array of [member](#member-structure) objects | List of members to sanitize (1-1000)                   |
-| dehoist?               | boolean                                      | Strip leading non-alphanum chars (default `true`)      |
-| exclude_roles?         | array of snowflakes                          | Role IDs to exclude from sanitization                  |
-| exclude_users?         | array of snowflakes                          | User IDs to exclude from sanitization                  |
-| fallback_name?         | string                                       | Failed sanitization fallback (default `ZChange Name`)  |
-| force_username?        | boolean                                      | Force the username to be used (default `false`)        |
-| max_char_spacing?      | integer                                      | Max spacing between chars (default unset)              |
-| max_consecutive?       | integer                                      | Max consecutive chars (default unset)                  |
-| max_consecutive_upper? | integer                                      | Max consecutive uppercase chars (default unset)        |
-| max_emoji_leading?     | integer                                      | Max leading emoji chars (default `0`)                  |
-| max_emoji_trailing?    | integer                                      | Max trailing emoji chars (default `0`)                 |
-| max_spaces?            | integer                                      | Max spaces or remove all (default unset)               |
-| normalize_brackets?    | boolean                                      | Normalize and strip dangling brackets (default `true`) |
-| normalize_regional?    | boolean                                      | Normalize regional indicators (default `true`)         |
-| replace_char?          | string                                       | Invalid replacement character (default empty string)   |
-| strip_pipes_leading?   | boolean                                      | Strip leading `\|` characters (default `true`)         |
-| strip_pipes_trailing?  | boolean                                      | Strip trailing `\|` characters (default `true`)        |
-| trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `true`)          |
+| Field                  | Type                                         | Description                                           |
+| ---------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| members                | array of [member](#member-structure) objects | List of members to sanitize (1-1000)                  |
+| dehoist?               | boolean                                      | Strip leading non-alphanum chars (default `true`)     |
+| exclude_roles?         | array of snowflakes                          | Role IDs to exclude from sanitization                 |
+| exclude_users?         | array of snowflakes                          | User IDs to exclude from sanitization                 |
+| fallback_name?         | string                                       | Failed sanitization fallback (default `ZChange Name`) |
+| force_username?        | boolean                                      | Force the username to be used (default `false`)       |
+| max_char_spacing?      | integer                                      | Max spacing between chars (default unset)             |
+| max_consecutive?       | integer                                      | Max consecutive chars (default unset)                 |
+| max_consecutive_upper? | integer                                      | Max consecutive uppercase chars (default unset)       |
+| max_emoji_leading?     | integer                                      | Max leading emoji chars (default `0`)                 |
+| max_emoji_trailing?    | integer                                      | Max trailing emoji chars (default `0`)                |
+| max_spaces?            | integer                                      | Max spaces or remove all (default unset)              |
+| normalize_brackets?    | boolean                                      | Normalize brackets (default `true`)                   |
+| normalize_regional?    | boolean                                      | Normalize regional indicators (default `true`)        |
+| replace_char?          | string                                       | Invalid replacement character (default empty string)  |
+| strip_pipes_leading?   | boolean                                      | Strip leading `\|` characters (default `true`)        |
+| strip_pipes_trailing?  | boolean                                      | Strip trailing `\|` characters (default `true`)       |
+| trailing_trademark?    | boolean                                      | Preserve trailing `®` or `™` (default `true`)         |
 
 #### Example Request Body
 
