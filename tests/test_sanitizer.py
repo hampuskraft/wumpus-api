@@ -143,3 +143,8 @@ def test_sanitize_member() -> None:
         )
         == "sanya"
     )
+
+    member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname=None, roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
+    member = Member(id="123", username="WG 丶↘☣DÊÂD PÔÔL☣↙", nickname="WG Zhu \DEAD POOL/", roles=[])
+    assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member])) == "WG Zhu \DEAD POOL/"
