@@ -62,10 +62,10 @@ class SanitizeSchema(BaseModel):
     max_emoji_trailing: int = Field(default=0, ge=0, le=32)
     max_spaces: int = Field(default=0, ge=0, le=32)
     members: list[Member] = Field(min_items=1, max_items=1000)
+    normalize_letter_symbols: bool = True
     normalize_parentheses: bool = True
     replace_char: str = Field(default="", max_length=1)
     strip_pipes: bool = True
-    strip_regional_indicators: bool = True
     trailing_trademark: bool = False
 
 
@@ -90,7 +90,7 @@ class Sanitizer:
         if schema.strip_pipes:
             name = name.replace("|", "")
 
-        if schema.strip_regional_indicators:
+        if schema.normalize_letter_symbols:
             name = "".join(REGIONAL_INDICATORS_TO_ASCII.get(c, c) for c in name)
 
         trailing_trademark = ""
