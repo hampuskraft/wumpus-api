@@ -292,7 +292,7 @@ class Sanitizer:
     @staticmethod
     def strip_dangling_brackets(name: str) -> str:
         """
-        Remove dangling brackets, that is closing brackets without an opening bracket, or vice versa.
+        Remove dangling parentheses (), square brackets [], or curly brackets {} (e.g. "foo (bar" -> "foo bar").
         """
 
         stack = []
