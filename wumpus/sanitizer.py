@@ -134,6 +134,9 @@ class Sanitizer:
         if schema.strip_pipes_trailing:
             name = name.rstrip("|")
 
+        if schema.normalize_brackets:
+            name = Sanitizer.strip_dangling_brackets(name)
+
         if schema.strict:
             name = re.sub(r"[^a-zA-Z0-9 _.-]", "", name).strip("._- ")
 
@@ -145,9 +148,6 @@ class Sanitizer:
 
         if trailing_emoji:
             name = f"{name} {trailing_emoji}"
-
-        if schema.normalize_brackets:
-            name = Sanitizer.strip_dangling_brackets(name)
 
         name = " ".join(name.split())[:32]
 
