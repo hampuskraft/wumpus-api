@@ -127,3 +127,19 @@ def test_sanitize_member() -> None:
     member = Member(id="123", username="test", nickname="test™", roles=[])
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=True)) == "test™"
     assert Sanitizer.sanitize_member(member, SanitizeSchema(members=[member], trailing_trademark=False)) == "test"
+
+    member = Member(id="123", username="🆂🅰🅽🆈🅰", nickname=None, roles=[])
+    assert (
+        Sanitizer.sanitize_member(
+            member,
+            SanitizeSchema(
+                members=[member],
+                max_char_spacing=3,
+                max_consecutive=4,
+                max_consecutive_upper=4,
+                max_emoji_leading=1,
+                max_emoji_trailing=1,
+            ),
+        )
+        == "sanya"
+    )

@@ -7,6 +7,39 @@ from unidecode import unidecode
 R = "®"
 TM = "™"
 
+REGIONAL_INDICATORS_TO_ASCII = {
+    "🇦": "A",
+    "🇧": "B",
+    "🇨": "C",
+    "🇩": "D",
+    "🇪": "E",
+    "🇫": "F",
+    "🇬": "G",
+    "🇭": "H",
+    "🇮": "I",
+    "🇯": "J",
+    "🇰": "K",
+    "🇱": "L",
+    "🇲": "M",
+    "🇳": "N",
+    "🇴": "O",
+    "🇵": "P",
+    "🇶": "Q",
+    "🇷": "R",
+    "🇸": "S",
+    "🇹": "T",
+    "🇺": "U",
+    "🇻": "V",
+    "🇼": "W",
+    "🇽": "X",
+    "🇾": "Y",
+    "🇿": "Z",
+    "🅰": "A",
+    "🅱": "B",
+    "🅾": "O",
+    "🅿": "P",
+}
+
 
 class Member(BaseModel):
     id: str
@@ -32,6 +65,7 @@ class SanitizeSchema(BaseModel):
     normalize_parentheses: bool = True
     replace_char: str = Field(default="", max_length=1)
     strip_pipes: bool = True
+    strip_regional_indicators: bool = True
     trailing_trademark: bool = False
 
 
@@ -55,6 +89,9 @@ class Sanitizer:
 
         if schema.strip_pipes:
             name = name.replace("|", "")
+
+        if schema.strip_regional_indicators:
+            name = "".join(REGIONAL_INDICATORS_TO_ASCII.get(c, c) for c in name)
 
         trailing_trademark = ""
         if schema.trailing_trademark:
